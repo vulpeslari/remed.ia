@@ -1,0 +1,182 @@
+.home-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.home-content .bg-img {
+    width: 85.5%;
+}
+
+.home-content header {
+    width: 100%;
+    margin-bottom: 1.6rem;
+    display: flex;
+}
+
+.home-content header button {
+    padding: .4rem 1.2rem;
+    border-radius: .5rem;
+    border: none;
+    background-color: var(--secondary);
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: .6rem;
+    margin-left: auto;
+    cursor: pointer;
+    transition: all ease-out .3s;
+}
+
+.home-content header button:hover,
+.chat button:hover {
+    opacity: .8;
+}
+
+.home-content .chat {
+    height: 79vh;
+}
+
+.home-content textarea {
+    padding: .5rem 1rem;
+    border-radius: .5rem;
+    border: none;
+    font-size: small;
+    outline: none;
+    overflow-y: auto;
+    resize: none;
+    max-height: 15vh;
+    width: 75rem;
+    transition: height 0.2s ease;
+}
+
+.input-message {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+}
+
+.input-message svg {
+    cursor: pointer;
+    transition: all ease-out .3s;
+    opacity: .8;
+}
+
+.input-message svg:hover {
+    opacity: .6;
+}
+
+.chat {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding-right: .5rem;
+}
+
+.message {
+    width: 47%;
+    padding: 1rem;
+    margin-bottom: 1.2rem;
+}
+
+.reply {
+    background-color: var(--secondaryVariant);
+    border-radius: 1rem 1rem 1rem 0;
+}
+
+.send {
+    background-color: var(--terciary);
+    align-self: flex-end;
+    border-radius: 1rem 1rem 0rem 1rem;
+}
+
+.message p {
+    font-size: small;
+}
+
+.chat button {
+    display: flex;
+    gap: .6rem;
+    align-items: center;
+    background-color: var(--secondaryVariant);
+    border: 0;
+    border-radius: 1rem;
+    padding: .5rem 1rem;
+    width: 10rem;
+    cursor: pointer;
+    transition: all ease-out .3s;
+}
+
+input[type='file'] {
+    display: none;
+}
+
+.file {
+    margin-left: -4rem;
+}
+
+.file svg {
+    color: gray;
+}
+
+.file span {
+    font-size: small;
+    position: absolute;
+    margin: -4rem 0 0 -74.5rem;
+    border-radius: .2rem;
+    background-color: var(--primary);
+    color: white;
+    padding: .2rem .5rem;
+    display: flex;
+    gap: .2rem;
+    align-items: center;
+}
+
+.file span svg {
+    color: white;
+}
+
+.pop-up {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    padding: 0 12rem;
+    z-index: 1;
+}
+
+.pop-up-content {
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    gap: 1.6rem;
+}
+
+.pop-up-content .patient-info {
+    background-color: white;
+    width: 110%;
+    height: 73vh;
+    padding: 1.6rem;
+    border-radius: .5rem;
+}
+
+.pop-up-content .patient-info button {
+    display: none;
+}
+
+.pop-up-content button {
+    background-color: transparent;
+    width: 20rem;
+    color: white;
+    margin-top: auto;
+}
+
+.right {
+    display: flex;
+    flex-direction: column;
+    height: 80vh;
+}

@@ -1,0 +1,73 @@
+.main {
+    height: 92vh;
+    margin: 1.6rem;
+}
+
+.bg-img {
+    height: 100%;
+    width: 100%;
+    margin: -1.6rem;
+    background-image: url('../../public/assets/background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: absolute;
+    opacity: .3;
+    z-index: -1;
+}
+
+.main header {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.main header h1 {
+    font-size: x-large;
+    font-weight: 600;
+}
+
+.main header svg {
+    font-size: x-large;
+}
+
+.main h2 {
+    font-size: medium;
+    font-weight: 500;
+    text-align: center;
+    margin-top: 12rem;
+}
+
+.content {
+    height: 100%;
+    display: flex;
+    gap: 1.6rem;
+    justify-content: center;
+    align-items: center;
+    margin-top: -13.5rem;
+}
+
+.category-card {
+    background-color: var(--background);
+    display: flex;
+    gap: .8rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 12rem;
+    height: 12rem;
+    border-radius: 1rem;
+    box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.2);
+    transition: all ease-out .3s;
+}
+
+.category-card svg {
+    font-size: xx-large;
+}
+
+.category-card:hover{
+    cursor: pointer;
+    background-color: var(--primary);
+}
