@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { toast, Zoom } from 'react-toastify';
 
 import CreatableSelect from 'react-select/creatable';
 import Select from 'react-select';
@@ -8,11 +10,14 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import { BiUser } from 'react-icons/bi';
 
 import useNavigationHelper from '../helpers/routes.js'
+import { getPatient, createPatient } from '../helpers/connect.js'
 
 import '../styles/patientForm.css'
 
-const PatientForm = ({ typeForm }) => {
+const PatientForm = ({ typeForm, patientId }) => {
     const { goBack } = useNavigationHelper();
+    const params = useParams(); 
+    const id = patientId ?? params.id;
     const type = typeForm == 'read' ? true : false;
 
     const [formData, setFormData] = useState({
@@ -28,23 +33,19 @@ const PatientForm = ({ typeForm }) => {
         bpm: ''
     });
 
-    const nameOptions = [
-        { value: '', label: '' },
-    ];
-
     const allergyOptions = [
         { value: '', label: '' },
     ];
 
     const historyOptions = [
-        { value: 'cancer', label: 'Câncer' },
-        { value: 'diabetes', label: 'Diabetes' },
-        { value: 'hipertensao', label: 'Hipertensão' }
+        { value: 'Câncer', label: 'Câncer' },
+        { value: 'Diabetes', label: 'Diabetes' },
+        { value: 'Hipertensao', label: 'Hipertensão' }
     ];
 
     const sexOptions = [
-        { value: 'Feminino', label: 'Feminino' },
-        { value: 'Masculino', label: 'Masculino' },
+        { value: 'F', label: 'Feminino' },
+        { value: 'M', label: 'Masculino' },
         { value: 'Outro', label: 'Outro' }
     ];
 
@@ -56,6 +57,33 @@ const PatientForm = ({ typeForm }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        createPatient(
+            {
+                name: formData.name,
+                data_de_nascimento: formData.dateBirth,
+                peso: formData.weight,
+                sexo: formData.sex?.value,
+                altura: formData.height,
+                alergias: formData.allergies.map(a => a.value).join(','),
+                historico_medico: formData.history.map(h => h.value).join(','),
+                temperatura: formData.temperature,
+                oxigenacao: formData.oxygen,
+                frequencia_cardiaca: formData.bpm
+            }
+        )
+        toast.success(`Paciente ${formData.name} cadastrado!`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Zoom,
+        });
+
         goBack();
     };
 
@@ -75,7 +103,7 @@ const PatientForm = ({ typeForm }) => {
                     : 'white',
             '&:hover': {
                 backgroundColor: state.isSelected ? 'var(--primaryVariant)' : 'var(--terciary)',
-                color: state.isSelected ? 'white' : '#333'
+                color: state.isSelected ? 'white' : 'gray'
             },
             cursor: 'pointer',
             transition: 'all .3s ease'
@@ -99,10 +127,32 @@ const PatientForm = ({ typeForm }) => {
         })
     };
 
+    useEffect(() => {
+        if (type) {
+            const fetchPatient = async () => {
+                const data = await getPatient(id);
+                setFormData({
+                    name: data.nome,
+                    dateBirth: data.data_nascimento || '',
+                    sex: sexOptions.find(opt => opt.value === data.sexo) || null,
+                    weight: data.peso || '',
+                    height: data.altura || '',
+                    allergies: (data.alergias || '').split(',').filter(Boolean).map(a => ({ value: a.trim(), label: a.trim() })),
+                    history: (data.historico_medico || '').split(',').filter(Boolean).map(h => ({ value: h.trim(), label: h.trim() })),
+                    temperature: data.temperatura || '',
+                    oxygen: data.oxigenacao || '',
+                    bpm: data.frequencia_cardiaca || ''
+                });
+            };
+            fetchPatient();
+        }
+    }, [type, id]);
+
+
     return (
         <div className='form-content'>
             {type
-                ? <h1><BiUser /> Paciente</h1>
+                ? <h1><BiUser /> {formData.name}</h1>
                 : <h1><TbStethoscope /> Acolhimento</h1>
             }
 
@@ -112,19 +162,15 @@ const PatientForm = ({ typeForm }) => {
                 {!type && <>
                     <div className='form-group'>
                         <label htmlFor='name'>Nome completo</label>
-                        <CreatableSelect
+                        <input
+                            type='text'
                             id='name'
-                            isClearable
-                            options={nameOptions}
                             value={formData.name}
-                            onChange={(selectedOption) => handleInputChange('name', selectedOption)}
-                            placeholder=""
-                            styles={customStyles}
-                            isDisabled={type}
+                            onChange={(e) => handleInputChange('name', e.target.value)}
+                            readOnly={type}
                         />
                     </div>
                 </>}
-
                 <div className='form-row'>
                     <div className='form-group'>
                         <label htmlFor='dateBirth'>Data de nascimento</label>
@@ -176,7 +222,10 @@ const PatientForm = ({ typeForm }) => {
                         isMulti
                         isClearable
                         options={allergyOptions}
-                        value={formData.allergies}
+                        value={formData.allergies.map(a => ({
+                            ...a,
+                            label: a.label.charAt(0).toUpperCase() + a.label.slice(1)
+                        }))}
                         onChange={(selectedOptions) => handleInputChange('allergies', selectedOptions)}
                         placeholder=""
                         styles={customStyles}
@@ -190,7 +239,10 @@ const PatientForm = ({ typeForm }) => {
                         isMulti
                         isClearable
                         options={historyOptions}
-                        value={formData.history}
+                        value={formData.history.map(h => ({
+                            ...h,
+                            label: h.label.charAt(0).toUpperCase() + h.label.slice(1)
+                        }))}
                         onChange={(selectedOptions) => handleInputChange('history', selectedOptions)}
                         placeholder=""
                         styles={customStyles}

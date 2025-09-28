@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import reportWebVitals from './reportWebVitals';
 
@@ -34,6 +36,9 @@ root.render(
           <Route path="/home" element={<Home />} />
         </Route>
         <Route element={<NavMenu />}>
+          <Route path="/home/:id" element={<Home />} />
+        </Route>
+        <Route element={<NavMenu />}>
           <Route path="/reception" element={<PatientForm typeForm='write'/>} />
         </Route>
         <Route element={<NavMenu />}>
@@ -44,6 +49,7 @@ root.render(
         </Route>
       </Routes>
     </BrowserRouter>
+    <ToastContainer />
   </React.StrictMode>
 );
 

@@ -1,27 +1,31 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
-import { IoDocumentText } from "react-icons/io5";
+import { IoDocumentText } from "react-icons/io5"
+
+import { ask } from '../../helpers/connect.js'
 
 import Records from '../widgets/records'
 
-const Message = ({ type }) => {
-    const [showRecords, setShowRecords] = useState(false);
+const Message = ({ type, text, id }) => {
+    const [showRecords, setShowRecords] = useState(false)
+
+    const access = localStorage.getItem("access")
 
     const handleRecords = () => {
-        setShowRecords(true);
+        setShowRecords(true)
     }
 
     return (
         <>
             <div className={`message ${type}`}>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam volutpat eros et feugiat bibendum. Donec sit amet efficitur nibh, vitae facilisis tortor. In sed maximus massa. Vestibulum vitae magna sagittis, luctus erat quis, varius odio. Phasellus commodo dictum neque, quis varius urna dapibus eget. Morbi auctor hendrerit vehicula. Donec id.
-                </p>
+                <p>{text}</p>
             </div>
-            {type === 'reply' && (
-                    <button onClick={handleRecords}><IoDocumentText/> Abrir prontuário</button>
-                )}
-            {showRecords && <Records onClose={() => setShowRecords(false)}/>}
+            {(type === 'reply' && access === 'doctor' && id !== null) && (
+                <button onClick={handleRecords}><IoDocumentText /> Abrir prontuário</button>
+            )}
+            {showRecords && (
+                <Records id={id} text={text} onClose={() => setShowRecords(false)} />
+            )}
         </>
     )
 }

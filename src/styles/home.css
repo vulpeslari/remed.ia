@@ -96,14 +96,24 @@
 .chat button {
     display: flex;
     gap: .6rem;
+    color: var(--primaryVariant);
     align-items: center;
-    background-color: var(--secondaryVariant);
     border: 0;
-    border-radius: 1rem;
-    padding: .5rem 1rem;
     width: 10rem;
     cursor: pointer;
     transition: all ease-out .3s;
+}
+
+.chat h4 {
+    font-weight: 400;
+    font-size: small;
+    font-style: italic;
+    position: absolute;
+    margin: 16rem 0 0 31rem
+}
+
+.chat h4 span {
+    color: var(--primaryVariant);
 }
 
 input[type='file'] {
@@ -158,7 +168,7 @@ input[type='file'] {
 
 .pop-up-content .patient-info {
     background-color: white;
-    width: 110%;
+    min-width: 42%;
     height: 73vh;
     padding: 1.6rem;
     border-radius: .5rem;
