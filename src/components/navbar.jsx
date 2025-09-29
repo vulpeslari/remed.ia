@@ -47,22 +47,23 @@ const Navbar = () => {
                 <GiMedicines />
                 <h1 onClick={goRoot}>Remed.IA</h1>
             </header>
-            <div className='nav-menu'>
-                <ul>Consultas recentes</ul>
-                {appointments.length > 0 ? (
-                    appointments.map((a) => (
-                        <li key={a.id} onClick={() => goAppointment(a.id_paciente)}>
-                            {patientName(a.id_paciente)}
-                        </li>
-                    ))
-                ) : (
-                    null
-                )}
-            </div>
             {access === 'doctor' && (
-                <button onClick={handleClick}>
-                    <MdAddComment /> Nova consulta
-                </button>
+                <><div className='nav-menu'>
+                    <ul>Consultas recentes</ul>
+                    {appointments.length > 0 ? (
+                        appointments.map((a) => (
+                            <li key={a.id} onClick={() => goAppointment(a.id_paciente)}>
+                                {patientName(a.id_paciente)}
+                            </li>
+                        ))
+                    ) : (
+                        null
+                    )}
+                </div>
+                    <button onClick={handleClick}>
+                        <MdAddComment /> Nova consulta
+                    </button>
+                </>
             )}
         </div>
     );

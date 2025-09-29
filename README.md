@@ -1,70 +1,34 @@
-# Getting Started with Create React App
+# Remed.IA
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+O Remed.IA é uma plataforma web que suporta a conversação com um assistente inteligente capaz de medicar pacientes de acordo com seus sintomas, perfil e histórico médico. Essa plataforma foi feita pensando em dois usuários:
+* O médico, quem atende o paciente e receita o medicamento e
+* O enfermeiro ou funcionário assistente hospitalar, que acolhe e cadastra as informações básicas dos pacientes antes que estes passem pelo olhar especialista do médico.
 
-## Available Scripts
+# Rotas
 
-In the project directory, you can run:
+* `/`
+    * Rota root, onde há o redirecionamento para a aba do Médico ou para a aba de Acolhimento
+* `/home`
+    * A rota principal para os dois usuários. O que difere a renderização de rotas é um token local nomeado `access`. O token é reiniciado sempre que o usuário clicar no atalho que volta para a rota root `/`
+    * Na home do Acolhimento, o usuário pode conversar com o chat ou Acolher/Cadastrar pacientes pela rota `/reception`
+    * Na home do Médico, o usuário pode conversar com o chat, navegar por consultas ou ver todos os pacientes cadastrados pela rota `/patients`
+* `/home/:id`
+    * Mostra o histórico de consultas de um paciente específico. As consultas são exclusivas ao Médico
+* `/reception`
+    * Permite o cadastro de Pacientes
+* `/patients`
+    * Mostra todos os pacientes cadastrados
+* `/patient/:id`
+    * Mostra os dados de um paciente específico
 
-### `npm start`
+# Como executar?
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Clone o repositório git
+```
+git clone https://github.com/vulpeslari/remed.ia.git
+cd seu-repo
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Execute o programa
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```npm start```
