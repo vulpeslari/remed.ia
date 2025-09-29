@@ -97,6 +97,7 @@
     display: flex;
     gap: .6rem;
     color: var(--primaryVariant);
+    background-color: transparent;
     align-items: center;
     border: 0;
     width: 10rem;

@@ -5,6 +5,7 @@ const useNavigationHelper = () => {
 
     return {
         goHome: () => navigate('/home'),
+        goAppointment: (id) => navigate(`/home/${id}`),
         goReception: () => navigate('/reception'),
         goPatients: () => navigate('/patients'),
         goPatient: (id) => navigate(`/patients/${id}`),

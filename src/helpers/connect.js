@@ -41,7 +41,12 @@ export async function createAppointment(data) {
     return await res.json();
 }
 
-export async function getAppointmentsByPatient(idPaciente) {
+export async function getAppointments() {
+    const res = await fetch(`${API_URL}/get_appointments`);
+    return await res.json();
+}
+
+export async function getAppointment(idPaciente) {
     const res = await fetch(`${API_URL}/get_appointment/${idPaciente}`);
     return await res.json();
 }

@@ -1,31 +1,71 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 
-import '../styles/navbar.css'
+import '../styles/navbar.css';
 
 import { GiMedicines } from "react-icons/gi";
 import { MdAddComment } from "react-icons/md";
 
 import useNavigationHelper from '../helpers/routes.js';
+import { getAppointments, getPatients } from '../helpers/connect.js';
 
 const Navbar = () => {
-    const { goRoot, goHome } = useNavigationHelper();
+    const { goRoot, goHome, goAppointment } = useNavigationHelper();
+    const [appointments, setAppointments] = useState([]);
+    const [patients, setPatients] = useState([]);
 
-    let access = localStorage.getItem("access") == "doctor" ? "Consulta" : "Conversa";
+    const access = localStorage.getItem("access");
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const appointmentsData = await getAppointments();
+                const patientsData = await getPatients();
+
+                setAppointments(appointmentsData || []);
+                setPatients(patientsData || []);
+            } catch (error) {
+                console.error('Erro ao buscar dados:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const handleClick = () => {
+        goHome();
+        window.location.reload();
+    };
+
+    const patientName = (id) => {
+        const patient = patients.find(p => p.id_paciente === id);
+        return patient ? patient.nome : 'Paciente desconhecido';
+    };
 
     return (
         <div className='navbar'>
             <header>
                 <GiMedicines />
-                <h1 onClick={() => goRoot()}>Remed.IA</h1>
+                <h1 onClick={goRoot}>Remed.IA</h1>
             </header>
             <div className='nav-menu'>
-                <ul>{access}s recentes</ul>
-                <li>{access} 1</li>
-                <li>{access} 2</li>
+                <ul>Consultas recentes</ul>
+                {appointments.length > 0 ? (
+                    appointments.map((a) => (
+                        <li key={a.id} onClick={() => goAppointment(a.id_paciente)}>
+                            {patientName(a.id_paciente)}
+                        </li>
+                    ))
+                ) : (
+                    null
+                )}
             </div>
-            <button onClick={() => goHome()}> <MdAddComment/> Nova {access}</button>
+            {access === 'doctor' && (
+                <button onClick={handleClick}>
+                    <MdAddComment /> Nova consulta
+                </button>
+            )}
         </div>
-    )
-}
+    );
+};
 
-export default Navbar
+export default Navbar;

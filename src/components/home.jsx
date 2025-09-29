@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { PiUsersThree } from "react-icons/pi";
@@ -8,7 +8,7 @@ import { ThreeDot } from 'react-loading-indicators';
 
 import Message from '../components/widgets/message'
 import useNavigationHelper from '../helpers/routes.js'
-import { ask, createAppointment } from '../helpers/connect.js'
+import { ask, createAppointment, getAppointment } from '../helpers/connect.js'
 
 import '../styles/home.css'
 
@@ -35,6 +35,7 @@ const Home = () => {
         if (!inputText.trim()) return;
 
         const messageSend = {
+            id: crypto.randomUUID(),
             type: 'send',
             text: inputText.trim(),
         };
@@ -63,11 +64,24 @@ const Home = () => {
 
         try {
             const data = await ask(access, inputText.trim())
-            const messageReply = { type: 'reply', text: data.answer }
+            const messageReply = {
+                id: crypto.randomUUID(),
+                type: 'reply',
+                text: data.answer
+            }
 
             setMessages((prev) => [...prev, messageReply])
 
-            
+            if (access == 'doctor') {
+                createAppointment(
+                    {
+                        id_paciente: patientId,
+                        id_medico: 1,
+                        motivo: messageSend.text,
+                        diagnostico: messageReply.text
+                    }
+                )
+            }
         } catch (e) {
             console.error(e)
         } finally {
@@ -75,6 +89,31 @@ const Home = () => {
             setLoading(false)
         }
     }
+
+    useEffect(() => {
+        const fetchAppointment = async () => {
+            if (!routePatientId) return;
+
+            try {
+                const appointment = await getAppointment(routePatientId);
+
+                if (appointment) {
+                    setPatientId(parseInt(routePatientId));
+
+                    const historyMessages = [
+                        { type: 'send', text: appointment?.[0].motivo },
+                        { type: 'reply', text: appointment?.[0].diagnostico }
+                    ];
+
+                    setMessages(historyMessages);
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        };
+
+        fetchAppointment();
+    }, [routePatientId]);
 
 
     return (
@@ -90,8 +129,8 @@ const Home = () => {
                 {messages.length === 0 && (
                     <h4>Digite para conversar com <span>Remed.IA</span>.</h4>
                 )}
-                {messages.map((msg, i) => (
-                    <Message key={i} id={patientId} type={msg.type} text={msg.text} />
+                {messages.map((msg) => (
+                    <Message key={msg.id} id={patientId} type={msg.type} text={msg.text} />
                 ))}
                 {loading && (
                     <div className="loading">
