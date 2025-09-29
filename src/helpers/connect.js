@@ -1,5 +1,20 @@
 const API_URL = 'http://127.0.0.1:5000'; 
 
+export async function deletePacient(id) {
+  const response = await fetch(`${API_URL}/delete_pacient/${id}`, {
+    method: "DELETE",
+  });
+  return await response.json();
+}
+
+export async function deleteAppointment(id) {
+  const response = await fetch(`${API_URL}/delete_appointment/${id}`, {
+    method: "DELETE",
+  });
+  return await response.json();
+}
+
+
 export async function ask(token, question) {
     const res = await fetch(`${API_URL}/ask`, {
         method: 'POST',

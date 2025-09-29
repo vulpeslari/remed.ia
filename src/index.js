@@ -14,6 +14,9 @@ import Navbar from './components/navbar';
 import PatientForm from './components/patientForm'
 import Patients from './components/patients'
 
+import DoctorRoute from './helpers/doctorRoute'
+import ReceptionRoute from './helpers/receptionRoute'
+
 function NavMenu() {
   return (
     <div className='flex-content'>
@@ -38,14 +41,28 @@ root.render(
         <Route element={<NavMenu />}>
           <Route path="/home/:id" element={<Home />} />
         </Route>
+
         <Route element={<NavMenu />}>
-          <Route path="/reception" element={<PatientForm typeForm='write'/>} />
+          <Route path="/reception" element={
+            <ReceptionRoute>
+              <PatientForm typeForm='write' />
+            </ReceptionRoute>
+          } />
+        </Route>
+        
+        <Route element={<NavMenu />}>
+          <Route path="/patients" element={
+            <DoctorRoute>
+              <Patients />
+            </DoctorRoute>
+          } />
         </Route>
         <Route element={<NavMenu />}>
-          <Route path="/patients" element={<Patients/>} />
-        </Route>
-        <Route element={<NavMenu />}>
-          <Route path="/patients/:id" element={<PatientForm typeForm='read'/>} />
+          <Route path="/patients/:id" element={
+            <DoctorRoute>
+              <PatientForm typeForm='read' />
+            </DoctorRoute>
+          } />
         </Route>
       </Routes>
     </BrowserRouter>

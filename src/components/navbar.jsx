@@ -41,6 +41,8 @@ const Navbar = () => {
         return patient ? patient.nome : 'Paciente desconhecido';
     };
 
+    const pacientsIds = [...new Set(appointments.map(a => a.id_paciente))];
+
     return (
         <div className='navbar'>
             <header>
@@ -51,9 +53,9 @@ const Navbar = () => {
                 <><div className='nav-menu'>
                     <ul>Consultas recentes</ul>
                     {appointments.length > 0 ? (
-                        appointments.map((a) => (
-                            <li key={a.id} onClick={() => goAppointment(a.id_paciente)}>
-                                {patientName(a.id_paciente)}
+                        pacientsIds.map((id) => (
+                            <li key={id} onClick={() => goAppointment(id)}>
+                                {patientName(id)}
                             </li>
                         ))
                     ) : (

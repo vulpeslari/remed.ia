@@ -64,6 +64,18 @@ const Home = () => {
 
         try {
             const data = await ask(access, inputText.trim())
+
+            if (access == 'doctor') {
+                createAppointment(
+                    {
+                        id_paciente: patientId,
+                        id_medico: 1,
+                        motivo: inputText.trim(),
+                        diagnostico: data.answer
+                    }
+                )
+            }
+
             const messageReply = {
                 id: crypto.randomUUID(),
                 type: 'reply',
@@ -71,17 +83,6 @@ const Home = () => {
             }
 
             setMessages((prev) => [...prev, messageReply])
-
-            if (access == 'doctor') {
-                createAppointment(
-                    {
-                        id_paciente: patientId,
-                        id_medico: 1,
-                        motivo: messageSend.text,
-                        diagnostico: messageReply.text
-                    }
-                )
-            }
         } catch (e) {
             console.error(e)
         } finally {
@@ -91,29 +92,30 @@ const Home = () => {
     }
 
     useEffect(() => {
-        const fetchAppointment = async () => {
-            if (!routePatientId) return;
+    const fetchAppointment = async () => {
+        if (!routePatientId) return;
 
-            try {
-                const appointment = await getAppointment(routePatientId);
+        try {
+            const appointments = await getAppointment(routePatientId);
 
-                if (appointment) {
-                    setPatientId(parseInt(routePatientId));
+            if (appointments && Array.isArray(appointments)) {
+                setPatientId(parseInt(routePatientId));
 
-                    const historyMessages = [
-                        { type: 'send', text: appointment?.[0].motivo },
-                        { type: 'reply', text: appointment?.[0].diagnostico }
-                    ];
+                const historyMessages = appointments.flatMap((consulta) => ([
+                    { type: 'send', text: consulta.motivo },
+                    { type: 'reply', text: consulta.diagnostico }
+                ]));
 
-                    setMessages(historyMessages);
-                }
-            } catch (e) {
-                console.error(e);
+                setMessages(historyMessages);
             }
-        };
+        } catch (e) {
+            console.error(e);
+        }
+    };
 
-        fetchAppointment();
-    }, [routePatientId]);
+    fetchAppointment();
+}, [routePatientId]);
+
 
 
     return (
