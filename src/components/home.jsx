@@ -21,7 +21,6 @@ const Home = () => {
     const [inputText, setInputText] = useState('');
     const [loading, setLoading] = useState(false);
     const [patientId, setPatientId] = useState(null)
-    const [hasCheckedId, setHasCheckedId] = useState(false)
 
     let access = localStorage.getItem("access");
 
@@ -51,7 +50,7 @@ const Home = () => {
             const match = idResponse.answer?.match(/\d+/)
             const patientId = match ? parseInt(match[0]) : null
 
-            if (!isNaN(patientId)) {
+            if (!isNaN(patientId) && access == 'doctor') {
                 setPatientId(patientId)
 
                 if (!routePatientId || parseInt(routePatientId) !== patientId) {
