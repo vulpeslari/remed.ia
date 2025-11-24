@@ -6,12 +6,12 @@
   padding: 0;
   font-family: Inter, sans-serif;
 
-  --primary: rgb(52, 169, 101);
+  --primary: rgb(231, 67, 2);
   --primaryVariant:rgb(40, 159, 96);
   --foreground: rgb(22, 22, 22);
-  --secondary: rgb(42, 214, 91);
-  --secondaryVariant:rgb(111, 214, 161);
-  --terciary: rgb(202, 243, 202);
+  --secondary: rgb(55, 55, 54);
+  --secondaryVariant:rgb(250, 147, 92);
+  --terciary: rgb(225, 224, 222);
 }
 
 .flex-content {
