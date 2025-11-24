@@ -1,21 +1,22 @@
 import React from 'react'
 
 import '../styles/root.css'
-import Login from './widgets/login'
+import Category from './widgets/category'
 
-import { GiPoliceCar } from "react-icons/gi";
+import { GiMedicines } from "react-icons/gi";
 
 const Root = () => {
   return (
     <div className='main'>
       <div className='bg-img'></div>
       <header>
-        <GiPoliceCar />
-        <h1>CTB.pro</h1>
+        <GiMedicines />
+        <h1>Remed.IA</h1>
       </header>
-      
+      <h2>Quem está acessando?</h2>
       <div className='content'>
-        <Login/>
+        <Category category={"Acolhimento"} token={"reception"}/>
+        <Category category={"Médico"} token={"doctor"}/>
       </div>
     </div>
   )

@@ -2,11 +2,15 @@ import React from 'react'
 
 import { FaArrowLeftLong } from "react-icons/fa6";
 
+import PatientForm from '../patientForm'
 
-const Stats = ( { onClose, id, text } ) => {
+const Records = ( { onClose, id, text } ) => {
     return (
         <div className='pop-up'>
             <div className='pop-up-content'>
+                <div className="patient-info">
+                    <PatientForm patientId={id} typeForm='read'/>
+                </div>
                 <div className="right">
                     <div className="message reply">
                         <p>{text}</p>
@@ -18,4 +22,4 @@ const Stats = ( { onClose, id, text } ) => {
     )
 }
 
-export default Stats
+export default Records

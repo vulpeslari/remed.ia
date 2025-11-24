@@ -1,22 +1,32 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { GiPoliceCar } from "react-icons/gi";
+import { PiUsersThree } from "react-icons/pi";
+import { TbStethoscope } from "react-icons/tb";
 import { IoMdSend } from "react-icons/io";
 import { ThreeDot } from 'react-loading-indicators';
 
 import Message from '../components/widgets/message'
 import useNavigationHelper from '../helpers/routes.js'
-import { ask } from '../helpers/connect.js'
+import { ask, createAppointment, getAppointment } from '../helpers/connect.js'
 
 import '../styles/home.css'
 
 const Home = () => {
-    const { goRoot } = useNavigationHelper();
+    const { id: routePatientId } = useParams()
+    const navigate = useNavigate()
+    const { goPatients, goReception } = useNavigationHelper();
 
     const [messages, setMessages] = useState([]);
     const [inputText, setInputText] = useState('');
     const [loading, setLoading] = useState(false);
+    const [patientId, setPatientId] = useState(null)
+
+    let access = localStorage.getItem("access");
+
+    const onClick = () => {
+        access == "doctor" ? goPatients() : goReception();
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -32,12 +42,43 @@ const Home = () => {
         setLoading(true)
 
         try {
-            const data = await ask(inputText.trim())
+            const idResponse = await ask(
+                access,
+                `Com base no texto, qual é o id_paciente do paciente? Retorne APENAS o id_paciente e nada mais. ${inputText.trim}`
+            )
+
+            const match = idResponse.answer?.match(/\d+/)
+            const patientId = match ? parseInt(match[0]) : null
+
+            if (!isNaN(patientId) && access == 'doctor') {
+                setPatientId(patientId)
+
+                if (!routePatientId || parseInt(routePatientId) !== patientId) {
+                    navigate(`/home/${patientId}`)
+                }
+            }
+        } catch (e) {
+            console.error(e)
+        }
+
+        try {
+            const data = await ask(access, inputText.trim())
+
+            if (access == 'doctor') {
+                createAppointment(
+                    {
+                        id_paciente: patientId,
+                        id_medico: 1,
+                        motivo: inputText.trim(),
+                        diagnostico: data.answer
+                    }
+                )
+            }
 
             const messageReply = {
                 id: crypto.randomUUID(),
                 type: 'reply',
-                text: data
+                text: data.answer
             }
 
             setMessages((prev) => [...prev, messageReply])
@@ -49,29 +90,54 @@ const Home = () => {
         }
     }
 
+    useEffect(() => {
+    const fetchAppointment = async () => {
+        if (!routePatientId) return;
+
+        try {
+            const appointments = await getAppointment(routePatientId);
+
+            if (appointments && Array.isArray(appointments)) {
+                setPatientId(parseInt(routePatientId));
+
+                const historyMessages = appointments.flatMap((consulta) => ([
+                    { type: 'send', text: consulta.motivo },
+                    { type: 'reply', text: consulta.diagnostico }
+                ]));
+
+                setMessages(historyMessages);
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    fetchAppointment();
+}, [routePatientId]);
+
+
+
     return (
         <div className='home-content'>
             <div className='bg-img'></div>
             <header>
-                <div>
-                    <GiPoliceCar />
-                    <h1 onClick={goRoot}>CTB.pro</h1>
-                </div>
-                <h2>Bem-vindo, <b>usuário</b>!</h2>
+                <button onClick={onClick}>{access == "doctor" ?
+                    <><PiUsersThree /> Pacientes</>
+                    : <><TbStethoscope /> Acolhimento</>}
+                </button>
             </header>
             <div className='chat'>
                 {messages.length === 0 && (
-                    <h4>Digite para conversar com <span>CTB.pro</span>.</h4>
+                    <h4>Digite para conversar com <span>Remed.IA</span>.</h4>
                 )}
                 {messages.map((msg) => (
-                    <Message key={msg.id} type={msg.type} text={msg.text} />
+                    <Message key={msg.id} id={patientId} type={msg.type} text={msg.text} />
                 ))}
                 {loading && (
                     <div className="loading">
-                        <ThreeDot color="var(--primary)" size="small" text="" textColor="" />
+                        <ThreeDot color="var(--secondaryVariant)" size="small" text="" textColor="" />
                     </div>
                 )}
-
             </div>
             <div className='input-message'>
                 <textarea
@@ -83,7 +149,7 @@ const Home = () => {
                             handleSubmit(e);
                         }
                     }}
-                    placeholder='Converse com CTB.pro...'>
+                    placeholder='Converse com Remed.IA...'>
                 </textarea>
                 <IoMdSend onClick={handleSubmit} size={24} />
             </div>

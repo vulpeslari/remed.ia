@@ -1,43 +1,24 @@
 import React, { useState } from 'react'
 
 import { IoDocumentText } from "react-icons/io5"
-import { TbGraph } from "react-icons/tb";
 
-import Stats from './stats';
-import Quiz from './quiz';
+import Records from '../widgets/records'
 
-const Message = ({ type, text, route, id }) => {
-    const [showQuiz, setShowQuiz] = useState(false)
-    const [showStats, setShowStats] = useState(false)
+const Message = ({ type, text, id }) => {
+    const [showRecords, setShowRecords] = useState(false)
+
+    const access = localStorage.getItem("access")
 
     return (
         <>
             <div className={`message ${type}`}>
                 <p>{text}</p>
             </div>
-
-            {(type === 'reply' && id !== null) && (
-                <>
-                    {route === 'quiz' && (
-                        <button onClick={() => setShowQuiz(true)}>
-                            <IoDocumentText /> Iniciar teste
-                        </button>
-                    )}
-
-                    {route === 'stats' && (
-                        <button onClick={() => setShowStats(true)}>
-                            <TbGraph /> Acessar estatísticas
-                        </button>
-                    )}
-                </>
+            {(type === 'reply' && access === 'doctor' && id !== null) && (
+                <button onClick={() => setShowRecords(true)}><IoDocumentText /> Abrir prontuário</button>
             )}
-
-            {showStats && (
-                <Stats id={id} text={text} onClose={() => setShowStats(false)} />
-            )}
-
-            {showQuiz && (
-                <Quiz id={id} text={text} onClose={() => setShowQuiz(false)} />
+            {showRecords && (
+                <Records id={id} text={text} onClose={() => setShowRecords(false)} />
             )}
         </>
     )
